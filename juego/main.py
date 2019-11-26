@@ -4,6 +4,10 @@ import os
 import pygame, sys          # import statement that imports the pygame and sys modules
 from pygame.locals import *
 import listeners.buttonselect as btn
+import listeners.chronometer as chro
+import listeners.radioButtonModos as ramo
+import listener.radioButtonSeries as rase
+import listerner.radioButtonTamanio as rata
 
 x = 180
 y = 105
@@ -61,6 +65,15 @@ buttongame.draw(DISPLAYSURF, (0, 0, 0))
 
 buttonsolution = btn.ButtonSelect(Silver, 850, 250, 150, 70, 'LA PRUEBA')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
+
+cronometro = chro.chronometer()
+cronometro.draw(DISPLAYSURF, (50,50))
+modos = ramo.radiobuttonModos()
+modos.draw(DISPLAYSURF,(100,100))
+series = rase.radiobuttonSeries()
+series.draw(DISPLAYSURF,(150,150))
+tamanio = rata.radiobuttonTamanio()
+tamanio.draw(DISPLAYSURF,(200,200))
 
 # Creando la ventana
 while True: # Importante: main game loop
