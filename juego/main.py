@@ -3,6 +3,7 @@
 import os
 import pygame, sys          # import statement that imports the pygame and sys modules
 from pygame.locals import *
+import listeners.buttonselect as btn
 
 x = 180
 y = 105
@@ -52,15 +53,34 @@ Instrucciones para dibujar diferentes figuras geométricas
 
 # pygame.draw.polygon(DISPLAYSURF, Yellow, ((146,0), (291,105),(236,277),(45,105)))
 pygame.draw.line(DISPLAYSURF, Teal, (240, 200), (240, 300), 5)
-pygame.draw.line(DISPLAYSURF, Teal, (840, 200), (840, 300), 5)
+pygame.draw.line(DISPLAYSURF, Teal, (820, 200), (820, 300), 5)
 # pygame.draw.circle(DISPLAYSURF, Lime, (250,80),50,2)
 
+buttongame = btn.ButtonSelect(Silver, 850, 100, 150, 70, 'LA PRUEBA')
+buttongame.draw(DISPLAYSURF, (0, 0, 0))
+
+buttonsolution = btn.ButtonSelect(Silver, 850, 250, 150, 70, 'LA PRUEBA')
+buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
 # Creando la ventana
 while True: # Importante: main game loop
 
     for event in pygame.event.get():    # Módulo event
+
+        pos = pygame.mouse.get_pos()
+
         if event.type == QUIT:  # Cuando se le da click a la X en la ventana para salir
             pygame.quit()       # Desactiva la librería Pygame
             sys.exit()          # Se encarga de terminar el programa.
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if buttongame.isOver(pos):
+                print("Sí reacciona al click")
+
+        if event.type == pygame.MOUSEMOTION:
+            if buttongame.isOver(pos):
+                buttongame.color = Olive
+            else:
+                buttongame.color = Black
+
     pygame.display.update() # draws the Surface object returned by pygame.display.set_mode() to the screen
