@@ -8,7 +8,7 @@ import listeners.chronometer as chro
 import listeners.radioButtonModos as ramo
 import listener.radioButtonSeries as rase
 import listerner.radioButtonTamanio as rata
-
+import listener.puzzle as puzz
 x = 180
 y = 105
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
@@ -69,11 +69,15 @@ buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 cronometro = chro.chronometer()
 cronometro.draw(DISPLAYSURF, (50,50))
 modos = ramo.radiobuttonModos()
-modos.draw(DISPLAYSURF,(100,100))
+modos.draw(DISPLAYSURF,(50,100))
 series = rase.radiobuttonSeries()
-series.draw(DISPLAYSURF,(150,150))
+series.draw(DISPLAYSURF,(50,150))
 tamanio = rata.radiobuttonTamanio()
-tamanio.draw(DISPLAYSURF,(200,200))
+tamanio.draw(DISPLAYSURF,(50,200))
+rompecabezas = puzz.SlidePuzzle(400,20,2)
+rompecabezas.draw(DISPLAYSURF,(100,100))
+
+
 
 # Creando la ventana
 while True: # Importante: main game loop
