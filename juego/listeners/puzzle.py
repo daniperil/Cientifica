@@ -23,8 +23,9 @@ class SlidePuzzle:
             image.blit(text,((ts-w)/2,(ts-h)/2)); self.images+=[image]
 
 
-
+    #Function to get the blank space of the puzzle
     def getBlank(self): return self.tiles[-1]
+    #Function to create a new blank
     def setBlank(self, pos): self.tiles[-1] = pos
     opentile = property(getBlank, setBlank)
     #Method for switching tiles (we are always going to swap with the blank, and the blank is always going to be
@@ -37,8 +38,6 @@ class SlidePuzzle:
 
     def random(self):
         adj = self.adjacent(); self.switch(random([pos for pos in adj if self.in_grid(pos) and pos!=self.prev]))
-
-
 
 
     def update(self,dt):
@@ -55,6 +54,7 @@ class SlidePuzzle:
                 #this part is what allows to switch tiles using the mouse
                 if self.in_grid(tile) and tile in self.adjacent(): self.switch(tile)
 
+    #
     def draw(self,screen):
         for i in range(self.tiles_len):
             x,y = self.tilepos[self.tiles[i]]
