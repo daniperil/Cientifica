@@ -31,18 +31,9 @@ class ButtonSelect:
 
         return False
 
+    def comenzar(self):
+        # Se comienza
+        return 0
 
-def comenzar():
-    # Se comienza
-    return 0
-
-
-def mostrarsolucion():
-    return 0
-
-
-def pintarcomenzar():
-    return 'Lo pintaa'
-
-def pintarsolucion():
-    return 'Este tambien'
+    def mostrarsolucion(self):
+        return 0
