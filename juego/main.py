@@ -3,12 +3,14 @@
 import os
 import pygame, sys          # import statement that imports the pygame and sys modules
 from pygame.locals import *
+from tkinter import *
 import listeners.buttonselect as btn
 import listeners.chronometer as chro
 import listeners.radioButtonModos as ramo
 import listener.radioButtonSeries as rase
 import listerner.radioButtonTamanio as rata
 import listener.puzzle as puzz
+
 x = 180
 y = 105
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
