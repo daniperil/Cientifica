@@ -1,15 +1,14 @@
 
 ##
 import os
-import pygame, sys          # import statement that imports the pygame and sys modules
+import pygame  # import statement that imports the pygame and sys modules
 from pygame.locals import *
 from tkinter import *
 import listeners.buttonselect as btn  # import para crear los botones
+import raiz as raiz
+import back.funciones as fun
 #import listeners.chronometer as chro
-import listeners.radiobuttonModos as ramo # import para crear los radioButtons
-#import listeners.radiobuttonSeries as rase
-#import listeners.radiobuttonTamanio as rata
-#import listeners.puzzle as puzz
+import listeners.puzzle as puzz
 
 # Se asignan valores con respecto al tamaño de la pantalla para ubicar la ventana principal en el centro
 
@@ -38,8 +37,8 @@ Black = (0, 0, 0)
 Blue = (0, 0, 255)
 Fuchsia = (255, 0, 255)
 Gray = (128, 128, 128)
-Green = (0,128,0)
-Lime = ( 0,255, 0)
+Green = (0, 128, 0)
+Lime = (0, 255, 0)
 Maroon = (33, 12, 8)
 Navy_Blue = (0, 0, 128)
 Olive = (128, 128, 0)
@@ -67,25 +66,6 @@ Instrucciones para dibujar diferentes figuras geométricas
 # pygame.draw.line(DISPLAYSURF, Teal, (820, 200), (820, 300), 5)
 # pygame.draw.circle(DISPLAYSURF, Lime, (250,80),50,2)
 
-# Recuadro que sorresponde al modo de juego
-# pygame.draw.rect(DISPLAYSURF, Maroon, (17, 17, 230, 90), 0)
-# font = pygame.font.SysFont('comicsans', 25)
-# text = font.render('Modo de juego', 0, White)
-# DISPLAYSURF.blit(text, (35, 22))
-
-# Recuadro que sorresponde a la serie numérica del juego
-# pygame.draw.rect(DISPLAYSURF, Maroon, (17, 115, 230, 300), 0)
-# font = pygame.font.SysFont('comicsans', 25)
-# text = font.render('Serie numérica', 0, White)
-# DISPLAYSURF.blit(text, (35, 120))
-
-
-# Recuadro que sorresponde al tamaño del tablero del juego
-# pygame.draw.rect(DISPLAYSURF, Maroon, (17, 425, 230, 125), 0)
-# font = pygame.font.SysFont('comicsans', 25)
-# text = font.render('Tamaño del tablero', 0, White)
-# DISPLAYSURF.blit(text, (35, 430))
-
 # Boton para comenzar un juego nuevo
 buttongame = btn.ButtonSelect(Silver, 850, 100, 150, 70, 'Comenzar')
 buttongame.draw(DISPLAYSURF, (0, 0, 0))
@@ -94,21 +74,11 @@ buttongame.draw(DISPLAYSURF, (0, 0, 0))
 buttonsolution = btn.ButtonSelect(Silver, 850, 250, 150, 70, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
+tablero = puzz.SlidePuzzle(200, 200, 200)
+tablero.draw(DISPLAYSURF)
+
 # cronometro = chro.chronometer()
 # cronometro.draw(DISPLAYSURF, (50, 50, 50))
-# Opción del modo de juego. Aventura
-# modos = ramo.Modos(White, 30, 60, 'Aventura: sin tiempo límite')
-# modos.draw(DISPLAYSURF, White)
-# Opción del modo de juego. Desafío
-# modos2 = ramo.Modos(White, 30, 90, 'Desafío: con tiempo límite')
-# modos2.draw(DISPLAYSURF, White)
-
-#series = rase.radiobuttonSeries()
-#series.draw(DISPLAYSURF, (50, 150))
-#tamanio = rata.radiobuttonTamanio()
-#tamanio.draw(DISPLAYSURF, (50, 200))
-#rompecabezas = puzz.SlidePuzzle(400,20,2)
-#rompecabezas.draw(DISPLAYSURF)
 
 # Recuadro correspondiente al espacio del tablero del juego
 # pygame.draw.rect(DISPLAYSURF, Maroon, (275, 35, 530, 490), 0)
@@ -116,8 +86,34 @@ buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 # text = font.render('Tablero del juego', 0, White)
 # DISPLAYSURF.blit(text, (290, 40))
 
+serie = []
+
+
+def ver():
+
+    global serie
+    if raiz.serie() == 1:
+        serie = fun.fibonacci(raiz.tamaniotablero())
+    elif raiz.serie() == 2:
+        serie = fun.cuadratica(raiz.tamaniotablero())
+    elif raiz.serie() == 3:
+        serie = fun.primos(raiz.tamaniotablero())
+    elif raiz.serie() == 4:
+        serie = fun.potenciasDeDos(raiz.tamaniotablero())
+    elif raiz.serie() == 5:
+        serie = fun.pares(raiz.tamaniotablero())
+    elif raiz.serie() == 6:
+        serie = fun.impares(raiz.tamaniotablero())
+
+    return serie
+
+
 # Creando la ventana
-while True: # Importante: main game loop
+while True:  # Importante: main game loop
+
+    if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
+        pygame.quit()
+        sys.exit()
 
     for event in pygame.event.get():    # Módulo event
 
@@ -135,14 +131,7 @@ while True: # Importante: main game loop
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
                 print("Sí reacciona al click, solution")
 
-        if event.type == pygame.MOUSEMOTION: # Cuando el mouse pasa por encima del botón
-            # Aún no funciona
-            if buttongame.isOver(pos):
-                buttongame.color = Olive
-            else:
-                buttongame.color = Black
-        #modos.update_checkbox(event)
-
-    #modos.render_checkbox()
     pygame.display.update() # draws the Surface object returned by pygame.display.set_mode() to the screen
     pygame.display.flip()
+
+

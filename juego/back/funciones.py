@@ -1,4 +1,6 @@
 import numpy as np
+
+
 def fibonacci(n):
     n = n**2
     answer = []
@@ -13,6 +15,7 @@ def fibonacci(n):
         fib_1 = fib_i
         n -= 1
     return answer
+
 
 def primos(n):
     arrayLength = 1
@@ -51,7 +54,6 @@ def primos(n):
     return answer
 
 
-
 def pares(n):
     n = n**2
     answer = []
@@ -62,6 +64,7 @@ def pares(n):
         answer.append(add)
         n -= 1
     return answer
+
 
 def impares(n):
     n = n**2
@@ -74,6 +77,7 @@ def impares(n):
         n -= 1
     return answer
 
+
 def potenciasDeDos(n):
     n = n**2
     answer = []
@@ -84,6 +88,7 @@ def potenciasDeDos(n):
         i -= 1
     return answer
 
+
 def cuadratica(n):
     n = n**2
     answer = []
@@ -93,8 +98,3 @@ def cuadratica(n):
         i += 1
     return answer
 
-print(fibonacci(3))
-print(cuadratica(3))
-print(pares(3))
-print(impares(3))
-print(primos(3))
