@@ -4,22 +4,6 @@ import pygame
 import listeners.casilla as puzz
 
 
-def hacermovimiento(casillas, event, n, DISPLAYSURF):
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_UP:
-            casillas = acomodara(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
-        if event.key == pygame.K_DOWN:
-            casillas = acomodarab(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
-        if event.key == pygame.K_LEFT:
-            casillas = acomodarizq(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
-        if event.key == pygame.K_RIGHT:
-            casillas = acomodarder(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
-
-
 Brown = (13, 8, 2)
 
 
@@ -53,7 +37,6 @@ def acomodara(casillas, n):
         for j in range(n):
             if str(casillas[i][j]) == '-1':
                 if i+1 == n:
-                    print('nuevo indice', i + 1)
                     ctypes.windll.user32.MessageBoxW(0, 'No se puede realizar el movimiento', 'MOVIMIENTO', 1)
                     break
                 else:
@@ -115,3 +98,22 @@ def verificarganador(casillasjuego, casillasordenadas):
     juego = casillas[0:len(casillas)-1]
     if np.array_equal(juego, ord):
         ctypes.windll.user32.MessageBoxW(0, 'Felicitaciones! Has ganado el juego.', 'JUEGO TERMINADO', 1)
+
+
+def hacermovimiento(casillas, event, n, DISPLAYSURF):
+
+    pos = pygame.mouse.get_pos()
+
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_DOWN:
+            casillas = acomodarab(casillas, n)
+            pintar(n, casillas, DISPLAYSURF)
+        if event.key == pygame.K_UP:
+            casillas = acomodara(casillas, n)
+            pintar(n, casillas, DISPLAYSURF)
+        if event.key == pygame.K_LEFT:
+            casillas = acomodarizq(casillas, n)
+            pintar(n, casillas, DISPLAYSURF)
+        if event.key == pygame.K_RIGHT:
+            casillas = acomodarder(casillas, n)
+            pintar(n, casillas, DISPLAYSURF)

@@ -55,14 +55,14 @@ Brown = (13, 8, 2)
 
 
 # Boton para comenzar un juego nuevo
-buttongame = btn.ButtonSelect(White, 680, 100, 200, 50, 'Comenzar')
+buttongame = btn.ButtonSelect(White, 650, 100, 200, 50, 'Comenzar')
 buttongame.draw(DISPLAYSURF, (0, 0, 0))
 
 # Boton para ver la solución del juego
-buttonsolution = btn.ButtonSelect(White, 680, 250, 200, 50, 'Ver solución')
+buttonsolution = btn.ButtonSelect(White, 650, 250, 200, 50, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
-cronometro = chro.Cronos(700, 400, 150, 50)
+cronometro = chro.Cronos(670, 400, 150, 50)
 
 serie = []
 
