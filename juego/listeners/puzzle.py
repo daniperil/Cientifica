@@ -33,17 +33,22 @@ def pintar(n, casillas, DISPLAYSURF):
 
 
 def acomodara(casillas, n):
+    a = False
     for i in range(n):
         for j in range(n):
             if str(casillas[i][j]) == '-1':
+                print(i, j)
                 if i+1 == n:
                     ctypes.windll.user32.MessageBoxW(0, 'No se puede realizar el movimiento', 'MOVIMIENTO', 1)
                     break
                 else:
+                    a = True
                     temp = casillas[i][j]
                     casillas[i][j] = casillas[i+1][j]
                     casillas[i+1][j] = temp
                     break
+        if a:
+            break
     return casillas
 
 
@@ -63,6 +68,7 @@ def acomodarab(casillas, n):
 
 
 def acomodarder(casillas, n):
+
     for i in range(n):
         for j in range(n):
             if str(casillas[i][j]) == '-1':
@@ -74,6 +80,7 @@ def acomodarder(casillas, n):
                     casillas[i][j] = casillas[i][j-1]
                     casillas[i][j-1] = temp
                     break
+
     return casillas
 
 
@@ -102,18 +109,19 @@ def verificarganador(casillasjuego, casillasordenadas):
 
 def hacermovimiento(casillas, event, n, DISPLAYSURF):
 
+
     pos = pygame.mouse.get_pos()
 
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_DOWN:
             casillas = acomodarab(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
+
         if event.key == pygame.K_UP:
             casillas = acomodara(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
+
         if event.key == pygame.K_LEFT:
             casillas = acomodarizq(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
+
         if event.key == pygame.K_RIGHT:
             casillas = acomodarder(casillas, n)
-            pintar(n, casillas, DISPLAYSURF)
+        pintar(n, casillas, DISPLAYSURF)

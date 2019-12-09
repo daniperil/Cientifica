@@ -1,5 +1,5 @@
 import numpy as np
-
+import heapq as pq
 
 def fibonacci(n):
     n = n**2 - 1
@@ -116,3 +116,75 @@ def arregloAMatriz(arr, n):
         matriz.append(add)
     return matriz
 
+class Node:
+    def __init__(self, inicial, padre, nivel, x, y, nuevoX, nuevoY):
+        self.padre = padre
+        self.matriz = inicial
+        self.matriz[x][y] = self.matriz[nuevoX][nuevoY]
+        self.matriz[nuevoX][nuevoY] = -1
+        self.costo = 100000000
+        self.x = nuevoX
+        self.y = nuevoY
+        self.nivel = nivel
+
+    def __lt__(self, other):
+        return self.costo+self.nivel < other.costo + other.nivel
+
+def calcularCosto(inicial, final, n):
+    costo = 0
+    for i in range(n):
+        for j in range(n):
+            if inicial[i][j] != final[i][j]:
+                costo += 1
+
+    return costo
+
+fila = [1, 0, -1, 0]
+columna = [0, -1, 0, 1]
+
+def esValido(x, y, n):
+    return x >= 0 and x < n and y >= 0 and y < n
+
+def solucionar(inicial, final, x, y, n):
+    z = []
+    pq.heapify(z)
+    raiz = Node(inicial, None, 0, x, y, x, y)
+
+    raiz.costo = calcularCosto(inicial, final, n)
+    pq.heappush(z,raiz)
+    while len(z)!= 0:
+        pq.heapify(z)
+        print(z[0].matriz)
+        min = pq.heappop(z)
+        print(min.matriz, min.costo, 'papi')
+        if min.costo == 0:
+            solucion(min)
+            break
+
+        for i in range(4):
+
+            if esValido(min.x+fila[i], min.y+columna[i], n):
+
+                hijo = Node([row[:] for row in min.matriz], min, min.nivel+1, min.x, min.y, min.x+fila[i], min.y+columna[i])
+
+                hijo.costo = calcularCosto(hijo.matriz, final, n)
+                print(hijo.matriz, hijo.costo, 'hijo')
+                pq.heappush(z, hijo)
+
+def solucion(raiz):
+
+    if raiz == None:
+        return
+    solucion(raiz.padre)
+
+    return raiz.matriz
+
+def ayGonorrea():
+    inicial = [[1,4,8], [-1,3,7],[5,2,6]]
+    final =[[1,2,3],[4,5,6],[7,8,-1]]
+    x = 1
+    y = 0
+    print(inicial[x][y])
+    solucionar(inicial, final, x, y, 3)
+
+ayGonorrea()

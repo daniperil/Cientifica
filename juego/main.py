@@ -113,11 +113,11 @@ def ver():
 
 
 casillas = ver()
-
+ini = 0
 # Creando la ventana
 while True:  # Importante: main game loop
 
-    cronometro.draw(DISPLAYSURF, (238, 217, 193), raiz.modojuego(), raiz.tamaniotablero())
+    cronometro.draw(DISPLAYSURF,ini, (238, 217, 193), raiz.modojuego(), raiz.tamaniotablero(), )
 
     if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
         pygame.quit()
@@ -134,7 +134,9 @@ while True:  # Importante: main game loop
         if event.type == pygame.MOUSEBUTTONDOWN:  # Cuando se da click en uno de los botones
             if buttongame.isOver(pos):
                 # Se reinician los valores del juego
+                ini = int(pygame.time.get_ticks()/1000)
                 casillas = ver()
+
             if buttonsolution.isOver(pos):
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
                 print("Sí reacciona al click, solution")
