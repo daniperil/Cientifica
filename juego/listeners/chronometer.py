@@ -22,7 +22,8 @@ class Cronos:
 
         pygame.draw.rect(win, outline, (self.x, self.y, self.width, self.height), 0)
         self.seconds = int(pygame.time.get_ticks() / 1000)
-        if self.seconds >= 10:
+        if self.seconds == 10:
+            self.clock = pygame.time.Clock()
             self.minutes += 1
             self.seconds = 0
         if self.minutes == 10 and self.seconds == 0:
