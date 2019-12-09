@@ -6,15 +6,16 @@ class Casilla:
         self.color = color
         self.x = x
         self.y = y
+        self.n = n
         if n == 3:
-            self.width = int(560/n) - 20
-            self.height = int(700/n) - 60
+            self.width = int(560/n) - 10
+            self.height = int(700/n) - 55
         elif n == 4:
-            self.width = int(560/n) - 20
-            self.height = int(700/n) - 60
+            self.width = int(560/n) - 8
+            self.height = int(700/n) - 45
         elif n == 5:
-            self.width = int(560/n) - 20
-            self.height = int(700/n) - 60
+            self.width = int(560/n)
+            self.height = int(700/n) - 35
         self.text = text
 
     def draw(self, win, outline=None):
@@ -25,7 +26,13 @@ class Casilla:
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
-            font = pygame.font.SysFont('comicsans', 50)
+            if self.n == 5:
+                font = pygame.font.SysFont('comicsans', 45)
+            elif self.n == 4:
+                font = pygame.font.SysFont('comicsans', 50)
+            elif self.n == 3:
+                font = pygame.font.SysFont('comicsans', 60)
+
             text = font.render(self.text, 1, (0, 0, 0))
             win.blit(text, (
             self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))

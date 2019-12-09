@@ -1,7 +1,8 @@
 
 ##
 import os
-
+import random
+import numpy as np
 import pygame  # import statement that imports the pygame and sys modules
 from pygame.locals import *
 from tkinter import *
@@ -10,6 +11,7 @@ import raiz as raiz
 import back.funciones as fun
 import listeners.chronometer as chro
 import listeners.casilla as puzz
+import listeners.puzzle as puzzle
 
 # Se asignan valores con respecto al tamaño de la pantalla para ubicar la ventana principal en el centro
 
@@ -51,27 +53,16 @@ White = (255, 255, 255)
 Yellow = (255, 255, 0)
 Brown = (13, 8, 2)
 
-# DISPLAYSURF.fill(Maroon)         # Método para llenar de color blanco la superficie del objeto. Método de: pygame.Surface objects
 
 # Boton para comenzar un juego nuevo
-buttongame = btn.ButtonSelect(White, 700, 100, 150, 50, 'Comenzar')
+buttongame = btn.ButtonSelect(White, 680, 100, 200, 50, 'Comenzar')
 buttongame.draw(DISPLAYSURF, (0, 0, 0))
 
 # Boton para ver la solución del juego
-buttonsolution = btn.ButtonSelect(White, 700, 250, 150, 50, 'Ver solución')
+buttonsolution = btn.ButtonSelect(White, 680, 250, 200, 50, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
-#tablero = puzz.SlidePuzzle(100, 150, 500, 150, raiz.tamaniotablero())
-#tablero.draw(DISPLAYSURF)
-
 cronometro = chro.Cronos(700, 400, 150, 50)
-cronometro.draw(DISPLAYSURF, (238, 217, 193))
-
-# Recuadro correspondiente al espacio del tablero del juego
-# pygame.draw.rect(DISPLAYSURF, Maroon, (275, 35, 530, 490), 0)
-# font = pygame.font.SysFont('comicsans', 25)
-# text = font.render('Tablero del juego', 0, White)
-# DISPLAYSURF.blit(text, (290, 40))
 
 serie = []
 
@@ -82,20 +73,6 @@ def ver():
     n = raiz.tamaniotablero()
     if raiz.serie() == 1:
         serie = fun.fibonacci(n)
-        #random.shuffle(serie)
-        casillas = fun.arregloAMatriz(serie, n)
-        xi = 20
-        for i in range(n):
-            yi = 15
-            for j in range(n):
-                if str(casillas[i][j]) == '-1':
-                    casilla = puzz.Casilla(Brown, yi, xi, n, '')
-                    casilla.draw(DISPLAYSURF, Brown)
-                else:
-                    casilla = puzz.Casilla((238, 217, 193), yi, xi, n, str(casillas[i][j]))
-                    casilla.draw(DISPLAYSURF, Brown)
-                yi = yi + int(560 / n) - 20
-            xi = xi + int(700 / n) - 40
     elif raiz.serie() == 2:
         serie = fun.cuadratica(raiz.tamaniotablero())
     elif raiz.serie() == 3:
@@ -107,17 +84,44 @@ def ver():
     elif raiz.serie() == 6:
         serie = fun.impares(raiz.tamaniotablero())
 
+    random.shuffle(serie)
+    casillas = fun.arregloAMatriz(serie, n)
+    xi = 15
+    for i in range(n):
+        yi = 50
+        for j in range(n):
+            if str(casillas[i][j]) == '-1':
+                casilla = puzz.Casilla(Brown, yi, xi, n, '')
+                casilla.draw(DISPLAYSURF, Brown)
+            else:
+                casilla = puzz.Casilla((238, 217, 193), yi, xi, n, str(casillas[i][j]))
+                casilla.draw(DISPLAYSURF, Brown)
+            if n == 5:
+                yi = yi + int(560 / n)
+            elif n == 4:
+                yi = yi + int(560 / n) - 8
+            elif n == 3:
+                yi = yi + int(560 / n) - 10
+        if n == 5:
+            xi = xi + int(700 / n) - 35
+        elif n == 4:
+            xi = xi + int(700 / n) - 45
+        elif n == 3:
+            xi = xi + int(700 / n) - 55
+
+    return casillas
+
+
+casillas = ver()
 
 # Creando la ventana
 while True:  # Importante: main game loop
 
-    cronometro.draw(DISPLAYSURF, (238, 217, 193))
+    cronometro.draw(DISPLAYSURF, (238, 217, 193), raiz.modojuego(), raiz.tamaniotablero())
 
     if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
         pygame.quit()
         sys.exit()
-
-    ver()
 
     for event in pygame.event.get():    # Módulo event
 
@@ -129,13 +133,16 @@ while True:  # Importante: main game loop
 
         if event.type == pygame.MOUSEBUTTONDOWN:  # Cuando se da click en uno de los botones
             if buttongame.isOver(pos):
-                # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
-                print("Sí reacciona al click, game", ver())
+                # Se reinician los valores del juego
+                casillas = ver()
             if buttonsolution.isOver(pos):
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
                 print("Sí reacciona al click, solution")
 
-    pygame.display.update() # draws the Surface object returned by pygame.display.set_mode() to the screen
+        puzzle.hacermovimiento(casillas, event, raiz.tamaniotablero(), DISPLAYSURF)
+        puzzle.verificarganador(np.array(casillas), np.sort(casillas, axis=None))
+
+    pygame.display.update()  # draws the Surface object returned by pygame.display.set_mode() to the screen
     pygame.display.flip()
 
 

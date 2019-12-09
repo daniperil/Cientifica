@@ -30,17 +30,6 @@ tk.Label(root,
          font=('comicsans', 12, 'bold'),
          pady=15).pack()
 
-# Boton de tipo de juego aventura
-tk.Radiobutton(root,
-               background=colors['back'],
-               padx=50,
-               pady=5,
-               activeforeground=colors['radios'],
-               text="Aventura: Sin tiempo límite.",
-               fg=colors['options'],
-               variable=v,
-               value=1).pack(anchor=tk.W)
-
 #Boton de tipo juego desafio
 tk.Radiobutton(root,
                text="Desafio: con tiempo limite.",
@@ -51,6 +40,17 @@ tk.Radiobutton(root,
                pady=5,
                background=colors['back'],
                value=2).pack(anchor=tk.W)
+
+# Boton de tipo de juego aventura
+tk.Radiobutton(root,
+               background=colors['back'],
+               padx=50,
+               pady=5,
+               activeforeground=colors['radios'],
+               text="Aventura: Sin tiempo límite.",
+               fg=colors['options'],
+               variable=v,
+               value=1).pack(anchor=tk.W)
 
 #Botones para tamaño del tablero
 tk.Label(root,
