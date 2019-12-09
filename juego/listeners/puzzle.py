@@ -1,97 +1,138 @@
-import pygame, sys, os, random
+import pygame
+import random
+import sys
 
 
-# This class needs to have 3 arguments the grid size, the size of the tiles and the size of the margin
 class SlidePuzzle:
-    def __init__(self, gs, ts, ms):
-        self.gs, self.ts, self.ms = gs, ts, ms
-        # Determines that there is going to be one tile less
-        self.tiles_len = gs[0]*gs[1]-1
-        self.tiles = [(x,y) for y in range(gs[1]) for x in range(gs[0])]
+    def __init__(self, x, y, width, height, n):
+        self.IMAGE_FILE = "./imagenes/back.jpg"
+        self.IMAGE_SIZE = (width, height)
+        self.x = x
+        self.y = y
+        self.TILE_WIDTH = width
+        self.TILE_HEIGHT = height
+        self.COLUMNS = n
+        self.ROWS = n
 
-        self.tilepos = {(x,y):(x*(ts+ms)+ms,y*(ts+ms)+ms) for y in range(gs[1]) for x in range(gs[0])}
-        self.prev = None
+        # bottom right corner contains no tile
+        self.EMPTY_TILE = (n-1, n-1)
+        self.BLACK = (0, 0, 0)
 
-        # This is going to implement the letters
+        # horizontal and vertical borders for tiles
+        self.hor_border = pygame.Surface((self.TILE_WIDTH, 1))
+        self.hor_border.fill(self.BLACK)
+        self.ver_border = pygame.Surface((1, self.TILE_HEIGHT))
+        self.ver_border.fill(self.BLACK)
 
-        self.images = []; font = pygame.font.Font(None, 120)
-        for i in range(self.tiles_len):
-            # This part is to be able to import the images
-            image = pygame.Surface((ts,ts)); image.fill((0,255,0))
-            text = font.render(str(i+1),2,(0,0,0)); w,h = text.get_size()
-            # The ts-w/2 and ts-h/2 is to put the numbers in the center
-            image.blit(text,((ts-w)/2,(ts-h)/2)); self.images+=[image]
+        # load the image and divide up in tiles
+        # putting borders on each tile also adds them to the full image
+        self.image = pygame.image.load(self.IMAGE_FILE)
+        self.tiles = {}
+        for c in range(self.COLUMNS):
+            for r in range(self.ROWS):
+                tile = self.image.subsurface(
+                    c*self.TILE_WIDTH, r*self.TILE_HEIGHT,
+                    self.TILE_WIDTH, self.TILE_HEIGHT)
+                self.tiles[(c, r)] = tile
+                if (c, r) != self.EMPTY_TILE:
+                    tile.blit(self.hor_border, (0, 0))
+                    tile.blit(self.hor_border, (0, self.TILE_HEIGHT-1))
+                    tile.blit(self.ver_border, (0, 0))
+                    tile.blit(self.ver_border, (self.TILE_WIDTH-1, 0))
+                    # make the corners a bit rounded
+                    tile.set_at((1, 1), self.BLACK)
+                    tile.set_at((1, self.TILE_HEIGHT-2), self.BLACK)
+                    tile.set_at((self.TILE_WIDTH-2, 1), self.BLACK)
+                    tile.set_at((self.TILE_WIDTH-2, self.TILE_HEIGHT-2), self.BLACK)
+        self.tiles[self.EMPTY_TILE].fill(self.BLACK)
 
+        # keep track of which tile is in which position
+        self.state = {(col, row): (col, row)
+                      for col in range(self.COLUMNS) for row in range(self.ROWS)}
 
-    # Function to get the blank space of the puzzle
-    def getBlank(self): return self.tiles[-1]
-    # Function to create a new blank
-    def setBlank(self, pos): self.tiles[-1] = pos
-    opentile = property(getBlank, setBlank)
-    # Method for switching tiles (we are always going to swap with the blank, and the blank is always going to be
-    # at the end of the array (opentile)
-    def switch(self,tile): self.tiles[self.tiles.index(tile)], self.opentile, self.prev = self.opentile,tile,self.opentile
-    def in_grid(self,tile): return tile[0]>=0 and tile[0]<self.gs[0] and tile[1]>=0 and tile[1]<self.gs[1]
+        # keep track of the position of the empty tyle
+        (emptyc, emptyr) = self.EMPTY_TILE
 
-    # Method to identify if the tiles are adjacent or not
-    def adjacent(self): x,y =self.opentile; return (x-1,y),(x+1,y), (x,y-1),(x,y+1)
-
-    def random(self):
-        adj = self.adjacent(); self.switch(random([pos for pos in adj if self.in_grid(pos) and pos!=self.prev]))
-
-    def update(self,dt):
-    # Defines relation with mouse
-        mouse = pygame.mouse.get_pressed()
-        mpos = pygame.mouse.get_pos()
-
-    # Now we decalre a relation between the tile and the mouse
-        if mouse[0]:
-            # x is to solve the problem of the margin
-            x,y = mpos[0]%(self.ts+self.ms), mpos[1]%(self.ts+self.ms)
-            if x>self.ms and y>self.ms:
-                tile = mpos[0]//self.ts,mpos[1]//self.ts
-                #this part is what allows to switch tiles using the mouse
-                if self.in_grid(tile) and tile in self.adjacent(): self.switch(tile)
-
-    #
-    def draw(self, screen):
-        for i in range(self.tiles_len):
-            x, y = self.tilepos[self.tiles[i]]
-            screen.blit(self.images[i],(x,y))
-
-    # This method is what helps the user interact with the game with the keyboard
-    def events(self,event):
-        if event.type == pygame.KEYDOWN:
-            for key, dx, dy in ((pygame.K_w,0,-1),(pygame.K_s,0,1),(pygame.K_a,-1,0),(pygame.K_d,1,0)):
-                if event.key == key:
-                    x,y = self.opentile;tile = x+dx,y+dy
-                    if self.in_grid(tile): self.switch(tile)
-
-            if event.key == pygame.K_SPACE:
-                for i in range (100): self.random()
-
-
-def main():
-    pygame.init()
-    os.environ['SDL_VIDEO_CENTERED'] = '1'
-    pygame.display.set_caption('Slide Puzzle')
-    screen = pygame.display.set_mode((800,600))
-    fpsclock = pygame.time.Clock()
-    # Shows the main screen determines the sizes
-    program = SlidePuzzle((3,3), 160, 5)
-
-    while True:
-        dt = fpsclock.tick()/100
-        screen.fill((0,0,0))
-        program.draw(screen)
+        # start game and display the completed puzzle
+        pygame.init()
+        self.display = pygame.display.set_mode(self.IMAGE_SIZE)
+        pygame.display.set_caption("shift-puzzle")
+        self.display.blit(self.image, (0, 0))
         pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:pygame.quit(); sys.exit()
-            program.events(event)
+    # swap a tile (c, r) with the neighbouring (emptyc, emptyr) tile
+    def shift(self, c, r):
+        global emptyc, emptyr
+        self.display.blit(
+            self.tiles[self.state[(c, r)]],
+            (emptyc*self.TILE_WIDTH, emptyr*self.TILE_HEIGHT))
+        self.display.blit(
+            self.tiles[self.EMPTY_TILE],
+            (c*self.TILE_WIDTH, r*self.TILE_HEIGHT))
+        self.state[(emptyc, emptyr)] = self.state[(c, r)]
+        self.state[(c, r)] = self.EMPTY_TILE
+        (emptyc, emptyr) = (c, r)
+        pygame.display.flip()
 
-        program.update(dt)
+    # shuffle the puzzle by making some random shift moves
+    def shuffle(self):
+        global emptyc, emptyr
+        # keep track of last shuffling direction to avoid "undo" shuffle moves
+        last_r = 0
+        for i in range(75):
+            # slow down shuffling for visual effect
+            pygame.time.delay(50)
+            while True:
+                # pick a random direction and make a shuffling move
+                # if that is possible in that direction
+                r = random.randint(1, 4)
+                if (last_r + r == 5):
+                    # don't undo the last shuffling move
+                    continue
+                if r == 1 and (emptyc > 0):
+                    self.shift(emptyc - 1, emptyr) # shift left
+                elif r == 4 and (emptyc < self.COLUMNS - 1):
+                    self.shift(emptyc + 1, emptyr) # shift right
+                elif r == 2 and (emptyr > 0):
+                    self.shift(emptyc, emptyr - 1) # shift up
+                elif r == 3 and (emptyr < self.ROWS - 1):
+                    self.shift(emptyc, emptyr + 1) # shift down
+                else:
+                    # the random shuffle move didn't fit in that direction
+                    continue
+                last_r = r
+                break  # a shuffling move was made
 
 
-if __name__ == '__main__':
-    main()
+    # process mouse clicks
+    at_start = True
+    showing_solution = False
+    while True:
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN :
+            if at_start:
+                # shuffle after the first mouse click
+                shuffle()
+                at_start = False
+            elif event.dict['button'] == 1:
+                # mouse left button: move if next to the empty tile
+                mouse_pos = pygame.mouse.get_pos()
+                c = mouse_pos[0] / TILE_WIDTH
+                r = mouse_pos[1] / TILE_HEIGHT
+                if (    (abs(c-emptyc) == 1 and r == emptyr) or
+                    (abs(r-emptyr) == 1 and c == emptyc)):
+                    shift (c, r)
+            elif event.dict['button'] == 3:
+                # mouse right button: show solution image
+                saved_image = display.copy()
+                display.blit(image, (0, 0))
+                pygame.display.flip()
+                showing_solution = True
+        elif showing_solution and (event.type == pygame.MOUSEBUTTONUP):
+            # stop showing the solution
+            display.blit(saved_image, (0, 0))
+            pygame.display.flip()
+            showing_solution = False
