@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def fibonacci(n):
     n = n**2 - 1
     answer = []
@@ -102,6 +103,7 @@ def cuadratica(n):
         i += 1
     answer.append(-1)
     return answer
+
 
 def arregloAMatriz(arr, n):
     matriz = []

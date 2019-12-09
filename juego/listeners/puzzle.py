@@ -13,16 +13,18 @@ class SlidePuzzle:
         self.TILE_HEIGHT = height
         self.COLUMNS = n
         self.ROWS = n
+        self.width = width
+        self.height = height
 
         # bottom right corner contains no tile
         self.EMPTY_TILE = (n-1, n-1)
         self.BLACK = (0, 0, 0)
 
         # horizontal and vertical borders for tiles
-        self.hor_border = pygame.Surface((self.TILE_WIDTH, 1))
-        self.hor_border.fill(self.BLACK)
-        self.ver_border = pygame.Surface((1, self.TILE_HEIGHT))
-        self.ver_border.fill(self.BLACK)
+        # self.hor_border = pygame.Surface((self.TILE_WIDTH, 1))
+        # self.hor_border.fill(self.BLACK)
+        # self.ver_border = pygame.Surface((1, self.TILE_HEIGHT))
+        # self.ver_border.fill(self.BLACK)
 
         # load the image and divide up in tiles
         # putting borders on each tile also adds them to the full image

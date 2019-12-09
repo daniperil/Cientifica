@@ -1,6 +1,7 @@
 
 ##
 import os
+
 import pygame  # import statement that imports the pygame and sys modules
 from pygame.locals import *
 from tkinter import *
@@ -8,7 +9,7 @@ import listeners.buttonselect as btn  # import para crear los botones
 import raiz as raiz
 import back.funciones as fun
 import listeners.chronometer as chro
-import listeners.puzzle as puzz
+import listeners.casilla as puzz
 
 # Se asignan valores con respecto al tamaño de la pantalla para ubicar la ventana principal en el centro
 
@@ -60,7 +61,7 @@ buttongame.draw(DISPLAYSURF, (0, 0, 0))
 buttonsolution = btn.ButtonSelect(White, 700, 250, 150, 50, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
-tablero = puzz.SlidePuzzle(100, 250, 120, 120, raiz.tamaniotablero())
+#tablero = puzz.SlidePuzzle(100, 150, 500, 150, raiz.tamaniotablero())
 #tablero.draw(DISPLAYSURF)
 
 cronometro = chro.Cronos(700, 400, 150, 50)
@@ -78,8 +79,23 @@ serie = []
 def ver():
 
     global serie
+    n = raiz.tamaniotablero()
     if raiz.serie() == 1:
-        serie = fun.fibonacci(raiz.tamaniotablero())
+        serie = fun.fibonacci(n)
+        #random.shuffle(serie)
+        casillas = fun.arregloAMatriz(serie, n)
+        xi = 20
+        for i in range(n):
+            yi = 15
+            for j in range(n):
+                if str(casillas[i][j]) == '-1':
+                    casilla = puzz.Casilla(Brown, yi, xi, n, '')
+                    casilla.draw(DISPLAYSURF, Brown)
+                else:
+                    casilla = puzz.Casilla((238, 217, 193), yi, xi, n, str(casillas[i][j]))
+                    casilla.draw(DISPLAYSURF, Brown)
+                yi = yi + int(560 / n) - 20
+            xi = xi + int(700 / n) - 40
     elif raiz.serie() == 2:
         serie = fun.cuadratica(raiz.tamaniotablero())
     elif raiz.serie() == 3:
@@ -91,8 +107,6 @@ def ver():
     elif raiz.serie() == 6:
         serie = fun.impares(raiz.tamaniotablero())
 
-    return serie
-
 
 # Creando la ventana
 while True:  # Importante: main game loop
@@ -102,6 +116,8 @@ while True:  # Importante: main game loop
     if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
         pygame.quit()
         sys.exit()
+
+    ver()
 
     for event in pygame.event.get():    # Módulo event
 
