@@ -7,7 +7,7 @@ from tkinter import *
 import listeners.buttonselect as btn  # import para crear los botones
 import raiz as raiz
 import back.funciones as fun
-#import listeners.chronometer as chro
+import listeners.chronometer as chro
 import listeners.puzzle as puzz
 
 # Se asignan valores con respecto al tamaño de la pantalla para ubicar la ventana principal en el centro
@@ -17,7 +17,7 @@ y = 105
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
 
 pygame.init()   # Inicializa cada módulo importado con pygame. it needs to be called first in order for many Pygame functions to work
-DISPLAYSURF = pygame.display.set_mode((1050, 560))   # Tamaño en pixeles de la superficie de la ventana, tupla: (ancho,alto)
+DISPLAYSURF = pygame.display.set_mode((900, 560))   # Tamaño en pixeles de la superficie de la ventana, tupla: (ancho,alto)
 pygame.display.set_caption('SCIENTIFIC PUZZLE')  # Se asigna el nombre de la ventana
 
 # Se asigna y se pinta la imagen del logo para la ventana
@@ -48,37 +48,24 @@ Silver = (192, 192, 192)
 Teal = (0, 128, 128)
 White = (255, 255, 255)
 Yellow = (255, 255, 0)
+Brown = (13, 8, 2)
 
 # DISPLAYSURF.fill(Maroon)         # Método para llenar de color blanco la superficie del objeto. Método de: pygame.Surface objects
 
-'''
-Instrucciones para dibujar diferentes figuras geométricas
-'''
-# pygame.draw.polygon(surface, color, pointlist, width)
-# pygame.draw.line(surface, color, start_point, end_point, width)
-# pygame.draw.lines(surface, color, closed, pointlist, width)
-# pygame.draw.circle(surface, color, center_point, radius, width)
-# pygame.draw.ellipse(surface, color, bounding_rectangle, width)
-# pygame.draw.rect(surface, color, rectangle_tuple, width)
-
-# pygame.draw.polygon(DISPLAYSURF, Yellow, ((146,0), (291,105),(236,277),(45,105)))
-# pygame.draw.line(DISPLAYSURF, Teal, (240, 200), (240, 300), 5)
-# pygame.draw.line(DISPLAYSURF, Teal, (820, 200), (820, 300), 5)
-# pygame.draw.circle(DISPLAYSURF, Lime, (250,80),50,2)
 
 # Boton para comenzar un juego nuevo
-buttongame = btn.ButtonSelect(Silver, 850, 100, 150, 70, 'Comenzar')
+buttongame = btn.ButtonSelect(White, 700, 100, 150, 50, 'Comenzar')
 buttongame.draw(DISPLAYSURF, (0, 0, 0))
 
 # Boton para ver la solución del juego
-buttonsolution = btn.ButtonSelect(Silver, 850, 250, 150, 70, 'Ver solución')
+buttonsolution = btn.ButtonSelect(White, 700, 250, 150, 50, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
-tablero = puzz.SlidePuzzle(200, 200, 200)
-tablero.draw(DISPLAYSURF)
+#tablero = puzz.SlidePuzzle({200, 200}, {200, 200}, 200)
+#tablero.draw(DISPLAYSURF)
 
-# cronometro = chro.chronometer()
-# cronometro.draw(DISPLAYSURF, (50, 50, 50))
+cronometro = chro.Cronos(700, 400, 150, 50)
+cronometro.draw(DISPLAYSURF, (238, 217, 193))
 
 # Recuadro correspondiente al espacio del tablero del juego
 # pygame.draw.rect(DISPLAYSURF, Maroon, (275, 35, 530, 490), 0)
@@ -111,6 +98,8 @@ def ver():
 # Creando la ventana
 while True:  # Importante: main game loop
 
+    cronometro.draw(DISPLAYSURF, (238, 217, 193))
+
     if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
         pygame.quit()
         sys.exit()
@@ -126,7 +115,7 @@ while True:  # Importante: main game loop
         if event.type == pygame.MOUSEBUTTONDOWN:  # Cuando se da click en uno de los botones
             if buttongame.isOver(pos):
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
-                print("Sí reacciona al click, game")
+                print("Sí reacciona al click, game", ver())
             if buttonsolution.isOver(pos):
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
                 print("Sí reacciona al click, solution")
