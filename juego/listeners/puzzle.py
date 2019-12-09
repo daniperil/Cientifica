@@ -86,7 +86,7 @@ class SlidePuzzle:
                 # pick a random direction and make a shuffling move
                 # if that is possible in that direction
                 r = random.randint(1, 4)
-                if (last_r + r == 5):
+                if last_r + r == 5:
                     # don't undo the last shuffling move
                     continue
                 if r == 1 and (emptyc > 0):
@@ -104,35 +104,34 @@ class SlidePuzzle:
                 break  # a shuffling move was made
 
 
-    # process mouse clicks
-    at_start = True
-    showing_solution = False
-    while True:
-        event = pygame.event.wait()
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN :
-            if at_start:
+# process mouse clicks
+    # at_start = True
+    # showing_solution = False
+        # while True:
+        # event = pygame.event.get()
+            # if event.type == pygame.QUIT:
+            # pygame.quit()
+        # sys.exit()
+            # elif event.type == pygame.MOUSEBUTTONDOWN:
+                # if at_start:
                 # shuffle after the first mouse click
-                shuffle()
-                at_start = False
-            elif event.dict['button'] == 1:
-                # mouse left button: move if next to the empty tile
-                mouse_pos = pygame.mouse.get_pos()
-                c = mouse_pos[0] / TILE_WIDTH
-                r = mouse_pos[1] / TILE_HEIGHT
-                if (    (abs(c-emptyc) == 1 and r == emptyr) or
-                    (abs(r-emptyr) == 1 and c == emptyc)):
-                    shift (c, r)
-            elif event.dict['button'] == 3:
+                # shuffle()
+            # at_start = False
+                # elif event.dict['button'] == 1:
+            # mouse left button: move if next to the empty tile
+            # mouse_pos = pygame.mouse.get_pos()
+                #c = mouse_pos[0] / TILE_WIDTH
+                #r = mouse_pos[1] / TILE_HEIGHT
+                #if (abs(c - emptyc) == 1 and r == emptyr) or (abs(r - emptyr) == 1 and c == emptyc):
+                #    shift(c, r)
+                #    elif event.dict['button'] == 3:
                 # mouse right button: show solution image
-                saved_image = display.copy()
-                display.blit(image, (0, 0))
-                pygame.display.flip()
-                showing_solution = True
-        elif showing_solution and (event.type == pygame.MOUSEBUTTONUP):
+                #saved_image = display.copy()
+                #display.blit(image, (0, 0))
+                # pygame.display.flip()
+        # showing_solution = True
+            # elif showing_solution and (event.type == pygame.MOUSEBUTTONUP):
             # stop showing the solution
-            display.blit(saved_image, (0, 0))
-            pygame.display.flip()
-            showing_solution = False
+            #display.blit(saved_image, (0, 0))
+            # pygame.display.flip()
+# showing_solution = False

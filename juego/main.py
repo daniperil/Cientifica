@@ -52,7 +52,6 @@ Brown = (13, 8, 2)
 
 # DISPLAYSURF.fill(Maroon)         # Método para llenar de color blanco la superficie del objeto. Método de: pygame.Surface objects
 
-
 # Boton para comenzar un juego nuevo
 buttongame = btn.ButtonSelect(White, 700, 100, 150, 50, 'Comenzar')
 buttongame.draw(DISPLAYSURF, (0, 0, 0))
@@ -61,7 +60,7 @@ buttongame.draw(DISPLAYSURF, (0, 0, 0))
 buttonsolution = btn.ButtonSelect(White, 700, 250, 150, 50, 'Ver solución')
 buttonsolution.draw(DISPLAYSURF, (0, 0, 0))
 
-#tablero = puzz.SlidePuzzle({200, 200}, {200, 200}, 200)
+tablero = puzz.SlidePuzzle(100, 250, 120, 120, raiz.tamaniotablero())
 #tablero.draw(DISPLAYSURF)
 
 cronometro = chro.Cronos(700, 400, 150, 50)
