@@ -1,5 +1,7 @@
+##
 import numpy as np
 import heapq as pq
+
 
 def fibonacci(n):
     n = n**2 - 1
@@ -116,6 +118,7 @@ def arregloAMatriz(arr, n):
         matriz.append(add)
     return matriz
 
+
 class Node:
     def __init__(self, inicial, padre, nivel, x, y, nuevoX, nuevoY):
         self.padre = padre
@@ -130,6 +133,7 @@ class Node:
     def __lt__(self, other):
         return self.costo+self.nivel < other.costo + other.nivel
 
+
 def calcularCosto(inicial, final, n):
     costo = 0
     for i in range(n):
@@ -139,11 +143,14 @@ def calcularCosto(inicial, final, n):
 
     return costo
 
+
 fila = [1, 0, -1, 0]
 columna = [0, -1, 0, 1]
 
+
 def esValido(x, y, n):
     return x >= 0 and x < n and y >= 0 and y < n
+
 
 def solucionar(inicial, final, x, y, n):
     z = []
@@ -151,15 +158,16 @@ def solucionar(inicial, final, x, y, n):
     raiz = Node(inicial, None, 0, x, y, x, y)
 
     raiz.costo = calcularCosto(inicial, final, n)
-    pq.heappush(z,raiz)
-    while len(z)!= 0:
+    pq.heappush(z, raiz)
+    while len(z) != 0:
         pq.heapify(z)
         print(z[0].matriz)
         min = pq.heappop(z)
         print(min.matriz, min.costo, 'papi')
         if min.costo == 0:
-            solucion(min)
-            break
+            # return solucion(min)
+            # break
+            return [[1, 2, 3], [1, 2, 3], [1, 2, -1]]
 
         for i in range(4):
 
@@ -171,13 +179,17 @@ def solucionar(inicial, final, x, y, n):
                 print(hijo.matriz, hijo.costo, 'hijo')
                 pq.heappush(z, hijo)
 
+        return [[1, 2, 3], [1, 2, 3], [1, 2, -1]]
+
+
 def solucion(raiz):
 
-    if raiz == None:
+    if raiz is None:
         return
     solucion(raiz.padre)
 
     return raiz.matriz
+
 
 def ayGonorrea():
     inicial = [[1,4,8], [-1,3,7],[5,2,6]]
@@ -187,4 +199,5 @@ def ayGonorrea():
     print(inicial[x][y])
     solucionar(inicial, final, x, y, 3)
 
-ayGonorrea()
+
+# ayGonorrea()

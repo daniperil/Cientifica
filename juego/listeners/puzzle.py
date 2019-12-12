@@ -1,4 +1,6 @@
 import ctypes
+import sys
+
 import numpy as np
 import pygame
 import listeners.casilla as puzz
@@ -37,7 +39,6 @@ def acomodara(casillas, n):
     for i in range(n):
         for j in range(n):
             if str(casillas[i][j]) == '-1':
-                print(i, j)
                 if i+1 == n:
                     ctypes.windll.user32.MessageBoxW(0, 'No se puede realizar el movimiento', 'MOVIMIENTO', 1)
                     break
@@ -104,13 +105,12 @@ def verificarganador(casillasjuego, casillasordenadas):
     ord = casillasordenadas[1::]
     juego = casillas[0:len(casillas)-1]
     if np.array_equal(juego, ord):
-        ctypes.windll.user32.MessageBoxW(0, 'Felicitaciones! Has ganado el juego.', 'JUEGO TERMINADO', 1)
+        if ctypes.windll.user32.MessageBoxW(0, 'Felicitaciones! Has ganado el juego.', 'JUEGO TERMINADO', 1):
+            pygame.quit()  # Desactiva la librería Pygame
+            sys.exit()
 
 
 def hacermovimiento(casillas, event, n, DISPLAYSURF):
-
-
-    pos = pygame.mouse.get_pos()
 
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_DOWN:
@@ -124,4 +124,4 @@ def hacermovimiento(casillas, event, n, DISPLAYSURF):
 
         if event.key == pygame.K_RIGHT:
             casillas = acomodarder(casillas, n)
-        pintar(n, casillas, DISPLAYSURF)
+    pintar(n, casillas, DISPLAYSURF)

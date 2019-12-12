@@ -2,6 +2,8 @@
 ##
 import os
 import random
+import time
+
 import numpy as np
 import pygame  # import statement that imports the pygame and sys modules
 from pygame.locals import *
@@ -19,7 +21,7 @@ x = 180
 y = 105
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
 
-pygame.init()   # Inicializa cada módulo importado con pygame. it needs to be called first in order for many Pygame functions to work
+pygame.init()  # Inicializa cada módulo importado con pygame. it needs to be called first in order for many Pygame functions to work
 DISPLAYSURF = pygame.display.set_mode((900, 560))   # Tamaño en pixeles de la superficie de la ventana, tupla: (ancho,alto)
 pygame.display.set_caption('SCIENTIFIC PUZZLE')  # Se asigna el nombre de la ventana
 
@@ -67,25 +69,7 @@ cronometro = chro.Cronos(670, 400, 150, 50)
 serie = []
 
 
-def ver():
-
-    global serie
-    n = raiz.tamaniotablero()
-    if raiz.serie() == 1:
-        serie = fun.fibonacci(n)
-    elif raiz.serie() == 2:
-        serie = fun.cuadratica(raiz.tamaniotablero())
-    elif raiz.serie() == 3:
-        serie = fun.primos(raiz.tamaniotablero())
-    elif raiz.serie() == 4:
-        serie = fun.potenciasDeDos(raiz.tamaniotablero())
-    elif raiz.serie() == 5:
-        serie = fun.pares(raiz.tamaniotablero())
-    elif raiz.serie() == 6:
-        serie = fun.impares(raiz.tamaniotablero())
-
-    random.shuffle(serie)
-    casillas = fun.arregloAMatriz(serie, n)
+def pintartablero(casillas, n):
     xi = 15
     for i in range(n):
         yi = 50
@@ -109,6 +93,48 @@ def ver():
         elif n == 3:
             xi = xi + int(700 / n) - 55
 
+
+def ver():
+
+    global serie
+    n = raiz.tamaniotablero()
+    if raiz.serie() == 1:
+        serie = fun.fibonacci(n)
+    elif raiz.serie() == 2:
+        serie = fun.cuadratica(raiz.tamaniotablero())
+    elif raiz.serie() == 3:
+        serie = fun.primos(raiz.tamaniotablero())
+    elif raiz.serie() == 4:
+        serie = fun.potenciasDeDos(raiz.tamaniotablero())
+    elif raiz.serie() == 5:
+        serie = fun.pares(raiz.tamaniotablero())
+    elif raiz.serie() == 6:
+        serie = fun.impares(raiz.tamaniotablero())
+
+    random.shuffle(serie)
+    casillas = fun.arregloAMatriz(serie, n)
+    pintartablero(casillas, n)
+    return casillas
+
+
+def solucionar(casillas, n):
+    real = casillas
+    cas = np.array(casillas)
+    coordenadas = list(zip(np.where(cas == -1)[0], np.where(cas == -1)[1]))
+    xval = coordenadas[0][0]
+    yval = coordenadas[0][1]
+    i = 0
+    while True:
+        casillas = fun.solucionar(casillas, casillas, xval, yval, n)
+        # casillas = [[i*1, i*2, i*3], [i**1, i**2, i**3], [i**i, -1, i**i]]
+        # puzzle.hacermovimiento(casillas, event, n, DISPLAYSURF)
+        print('entra', casillas)
+        if i == n:
+            break
+        pintartablero(casillas, n)
+        # puzzle.hacermovimiento(casillas, event, n, DISPLAYSURF)
+        i += 1
+        time.sleep(2)
     return casillas
 
 
@@ -116,8 +142,8 @@ casillas = ver()
 ini = 0
 # Creando la ventana
 while True:  # Importante: main game loop
-
-    cronometro.draw(DISPLAYSURF,ini, (238, 217, 193), raiz.modojuego(), raiz.tamaniotablero(), )
+    n = raiz.tamaniotablero()
+    cronometro.draw(DISPLAYSURF, ini, (238, 217, 193), raiz.modojuego(), n, )
 
     if raiz.v.get == 0 or raiz.w.get() == 0 or raiz.x.get() == 0:
         pygame.quit()
@@ -139,9 +165,10 @@ while True:  # Importante: main game loop
 
             if buttonsolution.isOver(pos):
                 # Se imprime en consola sólo para verificar que el botón sí está siendo escuchado
-                print("Sí reacciona al click, solution")
+                print('Solución del juego paso a paso')
+                # casillas = solucionar(casillas, n)
 
-        puzzle.hacermovimiento(casillas, event, raiz.tamaniotablero(), DISPLAYSURF)
+        puzzle.hacermovimiento(casillas, event, n, DISPLAYSURF)
         puzzle.verificarganador(np.array(casillas), np.sort(casillas, axis=None))
 
     pygame.display.update()  # draws the Surface object returned by pygame.display.set_mode() to the screen
